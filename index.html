@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sarelin Nail Art Studio – Premium Booking</title>
+<link rel="icon" type="image/png" href="logo.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+
+<style>
+    /* === RESET & BASIC STYLE === */
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+        margin: 0;
+        font-family: 'Poppins', sans-serif;
+        background: #fff;
+        color: #4a4a4a;
+        overflow-x: hidden;
+    }
+
+
+    h1, h2, h3, h4 { font-family: 'Playfair Display', serif; margin-bottom: 10px; color: #222; }
+    p { line-height: 1.6; color: #666; }
+   
+    /* Utility Classes */
+    /* Diperlebar sedikit agar 4 kolom muat dengan lega */
+    .container { max-width: 1200px; margin: auto; padding: 0 20px; }
+    .text-center { text-align: center; }
+    .pink-bg { background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%); }
+    .section-padding { padding: 80px 0; }
+   
+    /* BUTTON STYLES */
+    .btn {
+        display: inline-block;
+        padding: 10px 24px;
+        background: #ff7fa8;
+        color: #fff;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 127, 168, 0.3);
+        font-size: 14px;
+    }
+    .btn:hover {
+        background: #ff5c94;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 127, 168, 0.5);
+    }
+    .btn-outline {
+        background: transparent;
+        border: 2px solid #ff7fa8;
+        color: #ff7fa8;
+        padding: 8px 20px;
+    }
+    .btn-outline:hover { background: #ff7fa8; color: white; }
+    .btn-small { font-size: 12px; padding: 5px 15px; }
+
+
+    /* === SIDEBAR NAVIGATION === */
+    #sidebar {
+        position: fixed; left: -300px; top: 0;
+        width: 280px; height: 100vh;
+        background: #fff;
+        box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+        z-index: 1000;
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 40px 30px;
+        display: flex; flex-direction: column; gap: 20px;
+    }
+    #sidebar.active { left: 0; }
+    #sidebar h3 { color: #ff7fa8; margin-bottom: 20px; }
+    #sidebar a {
+        text-decoration: none; color: #333; font-size: 18px;
+        padding: 10px; border-radius: 8px; transition: .2s; display: block;
+    }
+    #sidebar a:hover { background: #fff0f5; color: #ff7fa8; transform: translateX(5px); }
+   
+    .menu-btn {
+        position: fixed; top: 20px; left: 20px;
+        background: #fff; width: 50px; height: 50px;
+        border-radius: 50%; display: flex; justify-content: center; align-items: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; z-index: 1001;
+        font-size: 24px; color: #ff7fa8; transition: .3s;
+    }
+    .menu-btn:hover { transform: scale(1.1); }
+
+
+    /* === HERO SECTION === */
+    #home {
+        height: 100vh;
+        background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+                    url('home.jpg') center/cover fixed;
+        display: flex; align-items: center; justify-content: center;
+        color: white; text-align: center;
+    }
+    #home h1 { font-size: 3.5rem; color: #F957B4; margin: 0; text-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    #home p { color: #f0f0f0; font-size: 1.2rem; margin-top: 10px; }
+
+
+    /* === SERVICES === */
+    .service-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px; margin-top: 40px;
+    }
+    .service-card {
+        background: white; padding: 30px; border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.3s;
+        position: relative; overflow: hidden;
+    }
+    .service-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+    .service-icon { font-size: 40px; margin-bottom: 20px; display: block; }
+   
+    .more-info {
+        display: none; margin-top: 15px; padding-top: 15px;
+        border-top: 1px solid #eee; font-size: 14px; color: #777;
+        animation: fadeIn 0.5s ease;
+    }
+    .service-card.active .more-info { display: block; }
+
+
+    /* === CATALOG & CART (MODIFIKASI: 1 BARIS 4 KOLOM) === */
+    .catalog-grid {
+        display: grid;
+        /* INI BAGIAN YANG DIUBAH: */
+        /* Memaksa menjadi 4 kolom dengan lebar yang sama (1 fraction each) */
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+
+    /* Responsif: Jika layar kecil (Tablet/HP), jangan dipaksa 4 kolom karena akan gepeng */
+    @media (max-width: 992px) {
+        .catalog-grid {
+            grid-template-columns: repeat(2, 1fr); /* Tablet jadi 2 kolom */
+        }
+    }
+    @media (max-width: 600px) {
+        .catalog-grid {
+            grid-template-columns: 1fr; /* HP jadi 1 kolom */
+        }
+    }
+
+
+    .catalog-item {
+        background: white; border-radius: 15px; overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: .3s;
+        display: flex; flex-direction: column;
+    }
+    .catalog-item:hover { transform: scale(1.02); }
+    .catalog-img { width: 100%; height: 220px; object-fit: cover; }
+    .catalog-body { padding: 20px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .price-tag { color: #ff7fa8; font-weight: bold; display: block; margin: 10px 0; font-size: 1.1rem; }
+    .btn-group { display: flex; gap: 5px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+
+
+    /* === STYLE DETAILS === */
+    #style-details { background: #fff; }
+    .detail-container {
+        display: flex; flex-direction: column; gap: 40px; margin-top: 40px;
+    }
+    .detail-card {
+        background: #fff;
+        border: 1px solid #ffe4e1;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        scroll-margin-top: 100px;
+    }
+    .detail-text { flex: 1; }
+    .detail-text h3 { color: #ff7fa8; font-size: 1.8rem; margin-top: 0; }
+    .detail-tags span {
+        background: #eee; padding: 5px 10px; border-radius: 5px; font-size: 12px; margin-right: 5px; color: #555;
+    }
+   
+    @media (max-width: 768px) {
+        .detail-card { flex-direction: column; text-align: left; padding: 25px; }
+    }
+
+
+    /* === TESTIMONIALS === */
+    .testimonial-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px; margin-top: 40px;
+    }
+    .chat-bubble {
+        background: white;
+        padding: 25px;
+        border-radius: 25px 25px 25px 0;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.05);
+        position: relative;
+        border: 1px solid #f0f0f0;
+    }
+    .chat-bubble::after {
+        content: '';
+        position: absolute;
+        bottom: -10px; left: 0;
+        border-width: 10px 10px 0 0;
+        border-style: solid;
+        border-color: white transparent transparent transparent;
+    }
+    .client-info {
+        display: flex; align-items: center; gap: 15px; margin-bottom: 15px;
+    }
+    .client-avatar {
+        width: 50px; height: 50px; background: #ddd; border-radius: 50%; object-fit: cover;
+    }
+    .stars { color: #ffd700; letter-spacing: 2px; }
+
+
+    /* === CHECKOUT SECTION === */
+    #checkout {
+        background: white; padding: 40px; border-radius: 20px;
+        box-shadow: 0 0 50px rgba(0,0,0,0.1); max-width: 800px; margin: 50px auto;
+    }
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
+    .form-group input, .form-group textarea {
+        width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px; font-family: inherit; transition: .3s;
+    }
+    .form-group input:focus { border-color: #ff7fa8; outline: none; }
+   
+    #cart-list { background: #fff0f5; padding: 20px; border-radius: 10px; margin-bottom: 20px; min-height: 50px; }
+    .cart-item-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 5px; }
+    .remove-btn { color: red; cursor: pointer; font-size: 0.8rem; margin-left: 10px; }
+    .validation-msg { color: red; font-size: 14px; margin-top: 5px; display: none; }
+
+
+    /* === TERMS & CONDITIONS === */
+    #terms { font-size: 0.9rem; color: #777; background: #f9f9f9; border-top: 1px solid #eee; }
+    #terms ul { padding-left: 20px; }
+    #terms li { margin-bottom: 8px; }
+
+
+    /* === FOOTER & CTA === */
+    #cta-banner {
+        background: linear-gradient(45deg, #ff7fa8, #ffb2c9); color: white;
+        padding: 60px 20px; text-align: center; border-radius: 20px 20px 0 0; margin-top: 50px;
+    }
+    footer { background: #333; color: white; padding: 40px 20px; text-align: center; }
+    .contact-cs { font-size: 1.2rem; margin-top: 10px; display: inline-block; color: #ff7fa8; text-decoration: none;}
+
+
+    @keyframes fadeIn { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
+   
+    #scrollTopBtn {
+        position: fixed; bottom: 20px; right: 20px; background: #333; color: white;
+        width: 45px; height: 45px; border-radius: 50%; display: none;
+        justify-content: center; align-items: center; cursor: pointer; z-index: 999; font-size: 20px;
+    }
+</style>
+</head>
+<body>
+
+
+    <div class="menu-btn" onclick="toggleSidebar()">☰</div>
+   
+    <nav id="sidebar">
+        <h3>Sarelin Nail Art Studio</h3>
+        <a href="#home" onclick="toggleSidebar()">Home</a>
+        <a href="#about" onclick="toggleSidebar()">Tentang Kami</a>
+        <a href="#services" onclick="toggleSidebar()">Layanan</a>
+        <a href="#terms" onclick="toggleSidebar()">Syarat dan Ketentuan</a>
+        <a href="#catalog" onclick="toggleSidebar()">Katalog</a>
+        <a href="#testimonials" onclick="toggleSidebar()">Testimoni</a>
+        <a href="#checkout-section" onclick="toggleSidebar()">Booking Form</a>
+        <hr style="border: 0; border-top: 1px solid #eee;">
+        <p style="font-size:12px; padding:0 10px;">Operational: 09.00 - 20.00</p>
+    </nav>
+
+
+    <section id="home">
+        <div class="container">
+            <h1>Perfect Nails, Perfect Confidence</h1>
+            <p>Temukan keindahan dalam setiap detail</p>
+            <br>
+            <a href="#catalog" class="btn">Lihat Katalog</a>
+        </div>
+    </section>
+
+
+    <section id="about" class="section-padding text-center">
+        <div class="container">
+            <h2>Tentang Kami</h2>
+            <p>Kami hadir sebagai jawaban atas kebutuhan kecantikan kukumu. Dengan pengalaman dan dedikasi tinggi, kami menawarkan One Step Solution dalam satu langkah untuk menciptakan tampilan kuku yang cantik, sehat, dan berkelas.</p>
+        </div>
+    </section>
+
+
+    <section id="services" class="section-padding pink-bg">
+        <div class="container">
+            <h2 class="text-center">Layanan Kami</h2>
+            <div class="service-grid">
+                <div class="service-card" id="srv1">
+                    <span class="service-icon">💅</span>
+                    <h3>Manicure Gel</h3>
+                    <p>Perawatan dasar kuku dengan pewarnaan gel tahan lama.</p>
+                    <button class="btn btn-outline btn-small" onclick="toggleService('srv1')">Learn More</button>
+                    <div class="more-info">
+                        <ul>
+                            <li>Durasi: 60 Menit</li>
+                            <li>Include: Potong kuku, kikir, vitamin.</li>
+                            <li>Garansi 3 hari.</li>
+                        </ul>
+                    </div>
+                </div>
+               
+                <div class="service-card" id="srv2">
+                    <span class="service-icon">✨</span>
+                    <h3>Nail Art Custom</h3>
+                    <p>Desain kuku sesuai request atau katalog kami.</p>
+                    <button class="btn btn-outline btn-small" onclick="toggleService('srv2')">Learn More</button>
+                    <div class="more-info">
+                        <ul>
+                            <li>Durasi: 90 - 120 Menit</li>
+                            <li>Teknik: Hand-drawn, Sticker, 3D Art.</li>
+                            <li>Free konsultasi desain.</li>
+                        </ul>
+                    </div>
+                </div>
+               
+    </section>
+
+    <section id="terms" class="section-padding" style="padding: 40px 0;">
+        <div class="container">
+            <h3>Syarat & Ketentuan Booking</h3>
+            <ul>
+                <li>Harap datang 10 menit sebelum jadwal booking Anda.</li>
+                <li>Keterlambatan lebih dari 15 menit dapat mengakibatkan pembatalan slot atau pengurangan durasi treatment.</li>
+                <li>Pembatalan atau perubahan jadwal maksimal H-1 sebelum kedatangan.</li>
+                <li>Kami berhak menolak layanan jika kondisi kuku customer mengalami infeksi jamur yang parah demi keamanan bersama.</li>
+                <li>Harga yang tertera belum termasuk tambahan aksesoris khusus (Swarovski, Charm besar, dll).</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="catalog" class="section-padding">
+        <div class="container">
+            <h2 class="text-center">Katalog Style</h2>
+            <p class="text-center">Pilih style favoritmu atau pelajari detailnya.</p>
+           
+            <div class="catalog-grid">
+                <div class="catalog-item">
+                    <img src="winter.jpg" class="catalog-img">
+                    <div class="catalog-body">
+                        <h4>Winter</h4>
+                        <span class="price-tag">Rp 250.000</span>
+                        <div class="btn-group">
+                            <a href="#desc-winter" class="btn btn-outline btn-small">Detail</a>
+                            <button class="btn btn-small" onclick="addToCart('Winter', 250000)">Add +</button>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="catalog-item">
+                    <img src="autumn.jpg" class="catalog-img">
+                    <div class="catalog-body">
+                        <h4>Autumn</h4>
+                        <span class="price-tag">Rp 300.000</span>
+                        <div class="btn-group">
+                            <a href="#desc-autumn" class="btn btn-outline btn-small">Detail</a>
+                            <button class="btn btn-small" onclick="addToCart('Autumn', 300000)">Add +</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="catalog-item">
+                    <img src="summer.jpg" class="catalog-img">
+                    <div class="catalog-body">
+                        <h4>Summer</h4>
+                        <span class="price-tag">Rp 235.000</span>
+                        <div class="btn-group">
+                            <a href="#desc-summer" class="btn btn-outline btn-small">Detail</a>
+                            <button class="btn btn-small" onclick="addToCart('Summer', 235000)">Add +</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="catalog-item">
+                    <img src="spring.jpg" class="catalog-img">
+                    <div class="catalog-body">
+                        <h4>Spring</h4>
+                        <span class="price-tag">Rp 300.000</span>
+                        <div class="btn-group">
+                            <a href="#desc-spring" class="btn btn-outline btn-small">Detail</a>
+                            <button class="btn btn-small" onclick="addToCart('Spring', 300000)">Add +</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="style-details" class="section-padding">
+        <div class="container">
+            <h2 class="text-center">Detail Deskripsi Style</h2>
+            <p class="text-center">Penjelasan lengkap mengenai inspirasi dan teknik setiap koleksi.</p>
+
+
+            <div class="detail-container">
+                <div id="desc-winter" class="detail-card">
+                    <div class="detail-text">
+                        <h3>❄️ Winter Nail Art Collection ❄️</h3>
+                        <p>Koleksi nail art bertema musim dingin yang terinspirasi dari suasana salju, malam dingin, dan keindahan pepohonan musim winter. Perpaduan warna biru, putih, dan abu-abu menciptakan kesan tenang, elegan, dan clean. Desain ini menampilkan detail pohon musim dingin dan efek snowflakes, memberikan tampilan kuku yang unik namun tetap lembut. Cocok untuk kamu yang menyukai gaya calm, classy, dan aesthetic, baik untuk daily look maupun momen spesial.</p>
+                        <p><strong>Ciri Khas :</strong> Cool tone, detail snow and tree, shimmering effect, elegance.</p>
+                        <div class="detail-tags">
+                            <span>#Elegant</span><span>#MarbleArt</span><span>#PartyLook</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="desc-autumn" class="detail-card">
+                    <div class="detail-text">
+                        <h3>🍂 Autumn Nail Art Collection 🍂</h3>
+                        <p>Koleksi nail art bertema musim gugur yang terinspirasi dari nuansa hangat alam, dedaunan kering, dan suasana cozy. Perpaduan warna hitam, cokelat, dan amber menciptakan tampilan yang bold, elegan, dan dewasa. Desain ini menonjolkan efek marble dan glossy finish yang memberikan kesan modern serta mewah. Cocok untuk kamu yang menyukai gaya classy, minimal, dan effortless, baik untuk aktivitas sehari-hari maupun acara spesial.</p>
+                        <p><strong>Ciri Khas :</strong> Warm tone, timeless, natural, elegance.</p>
+                        <div class="detail-tags">
+                            <span>#WarmTone</span><span>#MatteFinish</span><span>#DailyWear</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="desc-summer" class="detail-card">
+                    <div class="detail-text">
+                        <h3>☀️ Summer Nail Art Collection ☀️</h3>
+                        <p>Koleksi nail art bertema musim panas yang terinspirasi dari suasana cerah, udara hangat, dan nuansa segar. Perpaduan warna pastel, nude, dan soft bright tones menciptakan tampilan yang fresh, ringan, dan playful. Desain ini menonjolkan warna-warna cerah dengan finishing glossy yang memberikan kesan clean dan glowing. Cocok untuk kamu yang menyukai gaya fun, simple, dan effortless, baik untuk aktivitas sehari-hari maupun momen liburan.</p>
+                        <p><strong>Ciri Khas :</strong> Bright, pastel, cheerful, fresh.</p>
+                        <div class="detail-tags">
+                            <span>#Fun</span><span>#Glittery</span><span>#HolidayNails</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="desc-spring" class="detail-card">
+                    <div class="detail-text">
+                        <h3>🌸 Spring Nail Art Collection 🌸</h3>
+                        <p>Koleksi nail art bertema musim semi yang terinspirasi dari bunga yang bermekaran, warna lembut alam, dan suasana segar. Perpaduan warna pastel, soft pink, dan nude menciptakan tampilan yang manis, fresh, dan feminin. Desain ini menonjolkan detail halus dengan sentuhan floral atau aksen lembut yang memberikan kesan natural dan elegan. Cocok untuk kamu yang menyukai gaya soft, girly, dan clean, baik untuk aktivitas sehari-hari maupun momen spesial.</p>
+                        <p><strong>Ciri Khas :</strong> Pastel, soft, floral, feminin, sweet.</p>
+                        <div class="detail-tags">
+                            <span>#Cute</span><span>#FloralArt</span><span>#SoftGirl</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="testimonials" class="section-padding pink-bg">
+        <div class="container">
+            <h2 class="text-center">Apa Kata Mereka?</h2>
+            <div class="testimonial-grid">
+               
+                <div class="chat-bubble">
+                    <div class="client-info">
+                        <img src="pfp.jpg" class="client-avatar">
+                        <div>
+                            <strong>S. Lintang</strong>
+                            <div class="stars">★★★★★</div>
+                        </div>
+                    </div>
+                    <p>"Hasil nail art-nya rapi banget dan warnanya cocok sama kulitku. Prosesnya cepat tapi tetap teliti.  Aku puas banget!"</p>
+                </div>
+
+
+                <div class="chat-bubble">
+                    <div class="client-info">
+                        <img src="pfp.jpg" class="client-avatar">
+                        <div>
+                            <strong>Shafia R.</strong>
+                            <div class="stars">★★★★★</div>
+                        </div>
+                    </div>
+                    <p>"Tempatnya nyaman dan staff-nya ramah. Desainnya benar-benar sesuai request. Detailnya halus dan hasilnya kelihatan bersih banget. Pasti balik lagi!"</p>
+                </div>
+
+
+                <div class="chat-bubble">
+                    <div class="client-info">
+                        <img src="pfp.jpg" class="client-avatar">
+                        <div>
+                            <strong>Revina S.</strong>
+                            <div class="stars">★★★★★</div>
+                        </div>
+                    </div>
+                    <p>"Kukuku jadi kelihatan lebih cantik dan elegan. Warnanya awet dan nggak mudah rusak, bahkan setelah banyak aktivitas. Really recommended!"</p>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+
+    <section id="checkout-section" class="section-padding">
+        <div class="container text-center">
+            <h2>Formulir Booking</h2>
+            <p>Lengkapi data di bawah untuk mengamankan slot kamu.</p>
+
+
+            <div id="checkout">
+                <div style="text-align: left; margin-bottom: 20px;">
+                    <h3>Keranjang Pilihan</h3>
+                    <div id="cart-list">
+                        <p style="color:#999; font-style:italic;">Keranjang kosong...</p>
+                    </div>
+                    <div id="cart-error" class="validation-msg">⚠️ Keranjang kosong! Silakan pilih desain di katalog dulu.</div>
+                </div>
+
+
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="custName" placeholder="Contoh: Sarah Putri">
+                </div>
+                <div class="form-group">
+                    <label>Nomor WhatsApp/Kontak</label>
+                    <input type="tel" id="custContact" placeholder="Contoh: 0812xxxx">
+                </div>
+               
+                <div class="form-group">
+                    <label>Tanggal Booking</label>
+                    <input type="date" id="custDate">
+                    <div id="date-error" class="validation-msg">⚠️ Belum pilih tanggal booking!</div>
+                </div>
+
+
+                <div class="form-group">
+                    <label>Catatan Tambahan (Opsional)</label>
+                    <textarea id="custNote" rows="3" placeholder="Misal: Saya ingin warna diganti jadi biru..."></textarea>
+                </div>
+
+
+                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="processCheckout()">Konfirmasi Jadwal & Kirim</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="cta-banner">
+        <div class="container">
+            <h2 style="color:white; margin-bottom:15px;">Siap tampil lebih percaya diri?</h2>
+            <a href="#catalog" class="btn" style="background:white; color:#ff7fa8;">Book Your Nail Date Now 💖</a>
+        </div>
+    </section>
+
+
+    <footer id="contact">
+        <div class="container">
+            <h3 style="color: whitesmoke">Sarelin Nail Art Studio</h3>
+            <p>Jl. Melati Raya No. 27, Kel. Sukamaju, Kec. Cempaka Putih, Jakarta Selatan, DKI Jakarta</p>
+            <p>Butuh bantuan cepat? Hubungi Customer Service kami:</p>
+            <a href="https://wa.me/" class="contact-cs">📞 +62 812-0000-0000</a><br>
+            <a href="mailto:sarelin12345@gmail.com?subject=Tanya Layanan&body=Halo, saya ingin bertanya tentang..." class="contact-cs">✉️ sarelin12345@gmail.com</a>
+            <br><br>
+            <p style="font-size: 12px; color: #888;">&copy; 2025 Sarelin Nail Art. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+
+    <div id="scrollTopBtn" onclick="scrollToTop()">↑</div>
+
+
+    <script>
+        // DATA KERANJANG
+        let cart = [];
+
+
+        // Toggle Sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+
+        // Expand Service "Learn More"
+        function toggleService(id) {
+            const card = document.getElementById(id);
+            card.classList.toggle('active');
+           
+            const btn = card.querySelector('button');
+            if(card.classList.contains('active')){
+                btn.innerText = "Close Info";
+            } else {
+                btn.innerText = "Learn More";
+            }
+        }
+
+
+        // Add to Cart Logic
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            renderCart();
+            // Scroll otomatis ke bagian checkout
+            document.getElementById('checkout').scrollIntoView({behavior: 'smooth', block: 'center'});
+        }
+
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            renderCart();
+        }
+
+
+        function renderCart() {
+            const list = document.getElementById('cart-list');
+            const errorMsg = document.getElementById('cart-error');
+           
+            list.innerHTML = '';
+           
+            if (cart.length === 0) {
+                list.innerHTML = '<p style="color:#999; font-style:italic;">Keranjang kosong...</p>';
+                return;
+            } else {
+                errorMsg.style.display = 'none';
+            }
+
+
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price;
+                list.innerHTML += `
+                    <div class="cart-item-row">
+                        <span>${item.name}</span>
+                        <span>
+                            Rp ${item.price.toLocaleString()}
+                            <span class="remove-btn" onclick="removeFromCart(${index})">[x]</span>
+                        </span>
+                    </div>
+                `;
+            });
+            list.innerHTML += `<div style="text-align:right; font-weight:bold; margin-top:10px;">Total: Rp ${total.toLocaleString()}</div>`;
+        }
+
+
+        // Checkout Logic
+        function processCheckout() {
+            const name = document.getElementById('custName').value;
+            const contact = document.getElementById('custContact').value;
+            const date = document.getElementById('custDate').value;
+            const note = document.getElementById('custNote').value;
+           
+            const cartError = document.getElementById('cart-error');
+            const dateError = document.getElementById('date-error');
+           
+            let isValid = true;
+
+
+            if (cart.length === 0) {
+                cartError.style.display = 'block';
+                isValid = false;
+            } else {
+                cartError.style.display = 'none';
+            }
+
+
+            if (!date) {
+                dateError.style.display = 'block';
+                isValid = false;
+            } else {
+                dateError.style.display = 'none';
+            }
+
+
+            if (!name || !contact) {
+                alert("Mohon lengkapi Nama dan Kontak Anda.");
+                isValid = false;
+            }
+
+
+            if (isValid) {
+                const confirmMsg = confirm(`Konfirmasi Booking?\n\nNama: ${name}\nTanggal: ${date}\nTotal Item: ${cart.length}\n\nLanjut kirim pesanan?`);
+               
+                if (confirmMsg) {
+                    const itemList = cart.map(i => `- ${i.name} (Rp ${i.price})`).join('%0D%0A');
+                    const total = cart.reduce((sum, i) => sum + i.price, 0);
+                   
+                    const subject = `Booking Nail Art - ${name}`;
+                    const body = `Halo Admin, saya mau booking:%0D%0A%0D%0A` +
+                                 `Nama: ${name}%0D%0A` +
+                                 `Kontak: ${contact}%0D%0A` +
+                                 `Tanggal: ${date}%0D%0A` +
+                                 `Catatan: ${note}%0D%0A%0D%0A` +
+                                 `Pesanan:%0D%0A${itemList}%0D%0A` +
+                                 `Total Estimasi: Rp ${total}%0D%0A%0D%0A` +
+                                 `Mohon konfirmasinya. Terima kasih!`;
+                   
+                    alert("Pesanan disiapkan! Anda akan dialihkan ke aplikasi Email.");
+                }
+            }
+        }
+
+
+        // Scroll to Top Button
+        window.onscroll = function() {
+            const btn = document.getElementById('scrollTopBtn');
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                btn.style.display = "flex";
+            } else {
+                btn.style.display = "none";
+            }
+        };
+
+
+        function scrollToTop() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+
+    </script>
+</body>
+</html>
+
+
+
